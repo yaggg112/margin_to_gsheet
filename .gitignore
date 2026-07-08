@@ -1,0 +1,22 @@
+# 金鑰與憑證（絕對不能上傳）
+*.json
+credentials.json
+service_account.json
+
+# Python 快取
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 本地累積的歷史資料
+*.csv
+
+# 環境設定
+.env
+venv/
+.venv/
+
+# 系統檔
+.DS_Store
+Thumbs.db

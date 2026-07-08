@@ -1,0 +1,28 @@
+name: 每日台股融資維持率
+
+on:
+  schedule:
+    - cron: '0 14 * * 1-5'  # 台北時間 22:00 = UTC 14:00，只跑週一到週五
+  workflow_dispatch:          # 允許手動觸發
+
+jobs:
+  fetch-margin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 程式碼
+        uses: actions/checkout@v4
+
+      - name: 設定 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安裝套件
+        run: pip install -r requirements.txt
+
+      - name: 建立 Google 服務帳戶金鑰
+        run: echo '${{ secrets.GCP_ACCOUNT_CREDENTIAL }}' > credentials.json
+
+      - name: 執行抓取並寫入 Google Sheets
+        run: python margin_to_gsheet.py
