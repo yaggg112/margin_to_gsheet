@@ -22,7 +22,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: 建立 Google 服務帳戶金鑰
-        run: echo '${{ secrets.GCP_ACCOUNT_CREDENTIAL }}' > service_account.json
+        run: |
+          echo '${{ secrets.GCP_ACCOUNT_CREDENTIAL }}' > service_account.json
+          cat service_account.json | python3 -c "import sys,json; json.load(sys.stdin); print('JSON 格式正確')"
 
       - name: 執行抓取並寫入 Google Sheets
         run: python margin_to_gsheet.py
