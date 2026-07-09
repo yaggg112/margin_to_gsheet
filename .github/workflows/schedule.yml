@@ -21,6 +21,18 @@ jobs:
       - name: 安裝套件
         run: pip install -r requirements.txt
 
+      - name: 確認環境變數
+        env:
+          GCP_ACCOUNT_CREDENTIAL: ${{ secrets.GCP_ACCOUNT_CREDENTIAL }}
+        run: |
+          if [ -z "$GCP_ACCOUNT_CREDENTIAL" ]; then
+            echo "❌ 環境變數是空的，Secret 可能沒設定正確"
+            exit 1
+          else
+            echo "✅ 環境變數有值，長度：${#GCP_ACCOUNT_CREDENTIAL}"
+          fi
+ 
+
       - name: 執行抓取並寫入 Google Sheets
         env:
           GCP_ACCOUNT_CREDENTIAL: ${{ secrets.GCP_ACCOUNT_CREDENTIAL }}
