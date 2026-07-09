@@ -31,8 +31,8 @@ import io
 from google.oauth2.service_account import Credentials
 
 # ── 設定區（請依實際狀況修改）────────────────────────────────────────────────
-CREDENTIALS_FILE  = "credential.json"   # 服務帳戶 JSON 金鑰路徑
-SPREADSHEET_ID    = "your_spreadsheet_id_here"  # Google Sheets 網址中的 ID
+CREDENTIALS_FILE  = "service_account.json"   # 服務帳戶 JSON 金鑰路徑
+SPREADSHEET_ID    = "1bWB2dmwiGXp9NJ9GCTHsRja6wkHz_TJFCE-rWftLdD8"  # Google Sheets 網址中的 ID
 # 網址格式：https://docs.google.com/spreadsheets/d/【這裡】/edit
 SHEET_DAILY       = "每日維持率"            # Sheet 1：每日維持率
 SHEET_ETF         = "ETF清單"              # Sheet 2：ETF 清單
