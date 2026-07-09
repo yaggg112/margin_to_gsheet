@@ -2,8 +2,8 @@ name: 每日台股融資維持率
 
 on:
   schedule:
-    - cron: '0 14 * * 1-5'  # 台北時間 22:00 = UTC 14:00，只跑週一到週五
-  workflow_dispatch:          # 允許手動觸發
+    - cron: '0 14 * * 1-5'
+  workflow_dispatch:
 
 jobs:
   fetch-margin:
@@ -21,10 +21,7 @@ jobs:
       - name: 安裝套件
         run: pip install -r requirements.txt
 
-      - name: 建立 Google 服務帳戶金鑰
-        run: |
-          echo '${{ secrets.GCP_ACCOUNT_CREDENTIAL }}' > service_account.json
-          cat service_account.json | python3 -c "import sys,json; json.load(sys.stdin); print('JSON 格式正確')"
-
       - name: 執行抓取並寫入 Google Sheets
+        env:
+          GCP_ACCOUNT_CREDENTIAL: ${{ secrets.GCP_ACCOUNT_CREDENTIAL }}
         run: python margin_to_gsheet.py

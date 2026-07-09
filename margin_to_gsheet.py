@@ -32,7 +32,8 @@ from google.oauth2.service_account import Credentials
 
 # ── 設定區（請依實際狀況修改）────────────────────────────────────────────────
 CREDENTIALS_FILE  = "service_account.json"   # 服務帳戶 JSON 金鑰路徑
-SPREADSHEET_ID    = "1bWB2dmwiGXp9NJ9GCTHsRja6wkHz_TJFCE-rWftLdD8"        # Google Sheets 名稱（需已建立並共用）
+SPREADSHEET_ID    = "your_spreadsheet_id_here"  # Google Sheets 網址中的 ID
+# 網址格式：https://docs.google.com/spreadsheets/d/【這裡】/edit
 SHEET_DAILY       = "每日維持率"            # Sheet 1：每日維持率
 SHEET_ETF         = "ETF清單"              # Sheet 2：ETF 清單
 
@@ -271,19 +272,29 @@ def update_etf_sheet(ws, etf_list: list[dict]) -> None:
 
 def main():
     # Google Sheets 認證
+    # GitHub Actions 時從環境變數讀取，本地執行時從檔案讀取
+    import os, json
     scopes = [
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive",
     ]
-    creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=scopes)
+    credential_json = os.environ.get("GCP_ACCOUNT_CREDENTIAL")
+    if credential_json:
+        # GitHub Actions：從環境變數讀取 JSON 內容
+        creds = Credentials.from_service_account_info(
+            json.loads(credential_json), scopes=scopes
+        )
+    else:
+        # 本地執行：從 service_account.json 檔案讀取
+        creds = Credentials.from_service_account_file(CREDENTIALS_FILE, scopes=scopes)
     gc = gspread.authorize(creds)
 
-    # 開啟試算表
+    # 開啟試算表（用 ID，不受試算表改名影響）
     try:
         spreadsheet = gc.open_by_key(SPREADSHEET_ID)
     except gspread.SpreadsheetNotFound:
         raise FileNotFoundError(
-            f"找不到試算表「{SPREADSHEET_ID}」，"
+            f"找不到試算表（ID：{SPREADSHEET_ID}），"
             f"請確認 ID 正確且已共用給服務帳戶。"
         )
 
